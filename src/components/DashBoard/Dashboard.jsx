@@ -34,7 +34,7 @@ const InvoiceApp = () => {
       const token = localStorage.getItem("token");
       
       if (!token) {
-        navigate("/login");
+        navigate("/");
         return;
       }
 
@@ -175,9 +175,9 @@ const InvoiceApp = () => {
             <div className="avatar">
               <i className="fas fa-user"></i>
             </div>
-            <div className="user-info">
-              <span className="user-name">{user?.name || "Sanskar Prajapat"}</span>
-              <span className="user-email">{user?.email||""}</span>
+            <div className="user-info-header">
+              <span className="user-name-header">{user?.name || "N/A"}</span>
+              <span className="user-email-header">{user?.email||"N/A"}</span>
             </div>
           </div>
         </div>
@@ -226,7 +226,7 @@ const InvoiceApp = () => {
             onClick={() => setShowLogoutConfirm(true)}
            
           >
-            <i className="fas fa-sign-out-alt" style={{fontSize:"10px", marginRight:"0px"}}></i> Logout
+            <i className="fas fa-sign-out-alt" style={{fontSize:"10px", marginRight:"-5px"}}></i> Logout
           </button>
         </div>
         </div>

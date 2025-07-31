@@ -2034,8 +2034,8 @@ const printInvoice = async (invoiceData) => {
           </div>
 
                <button 
-      className="Button" 
-      onClick={()=>printInvoice(invoice)}
+          onClick={()=>printInvoice(invoice)} 
+       className={`Button ${!isBuyerInfoComplete() ? 'disabled' : ''}`}
     >
       <i className="fas fa-print"></i> Print Invoice
     </button>
