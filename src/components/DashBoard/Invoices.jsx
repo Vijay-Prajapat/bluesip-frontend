@@ -164,6 +164,11 @@ const fetchInvoices = async (token) => {
     }
   };
 
+   const formatDateForPDF = (dateString) => {
+    if (!dateString) return "";
+    const [day, month, year] = dateString.split('-');
+    return `${day}/${month}/${year}`;
+  };
   // PDF Generation
   const downloadPDF = async (invoiceData) => {
   try {
@@ -192,7 +197,34 @@ const fetchInvoices = async (token) => {
         ...invoiceData.buyer
       }
     };
-  
+        const maxRows = 3;
+const currentRows = formattedInvoice.items.length;
+const emptyRowsNeeded = maxRows - currentRows;
+
+const itemRows = formattedInvoice.items.map(item => `
+  <tr>
+    <td style="padding: 5px; text-align: center; border-right:1px solid #000;border-bottom:none !important;">${item.srNo}</td>
+    <td style="padding: 5px; border-right:1px solid #000;border-bottom:none !important;">${item.description}</td>
+    <td style="padding: 5px; text-align: center; border-right:1px solid #000;border-bottom:none !important;">${item.hsnCode}</td>
+    <td style="padding: 5px; text-align: center; border-right:1px solid #000;border-bottom:none !important;">${item.quantity} Case</td>
+    <td style="padding: 5px; text-align: center;border-right:1px solid #000;border-bottom:none !important;">${Number(item.rate).toFixed(2)}</td>
+    <td style="padding: 5px; text-align: center;border-right:1px solid #000;border-bottom:none !important;">Case</td>
+    <td style="padding: 5px; text-align: right;border-bottom:none !important;">${Number(item.amount).toFixed(2)}</td>
+  </tr>
+`).join('');
+
+const emptyRows = Array.from({ length: emptyRowsNeeded }, () => `
+  <tr style="height: 30px;">
+    <td style="border-right:1px solid #000; border-bottom:none !important;"></td>
+    <td style="border-right:1px solid #000; border-bottom:none !important;"></td>
+    <td style="border-right:1px solid #000; border-bottom:none !important;"></td>
+    <td style="border-right:1px solid #000; border-bottom:none !important;"></td>
+    <td style="border-right:1px solid #000;border-bottom:none !important;"></td>
+    <td style="border-right:1px solid #000; border-bottom:none !important;"></td>
+    <td style="border-bottom:none !important;"></td>
+  </tr>
+`).join('');
+
     const tempDiv = document.createElement('div');
     tempDiv.style.width = '210mm';
     tempDiv.style.padding = '10px';
@@ -202,157 +234,141 @@ const fetchInvoices = async (token) => {
     
     tempDiv.innerHTML = `
       <!-- Main Border Wrapper -->
-      <div style="border: 1px solid #000; font-family: sans-serif; font-size: 12px; padding: 0;">
+      <div style="border: 1px solid #000; font-family: sans-serif; font-size: 10px; padding: 0;">
 
         <!-- Title -->
         <div style="display:flex;justify-content:space-between;align-item:center;padding: 10px ; border-bottom: 1px solid #000;">
-          <div style ="font-weight:bold; font-size:16px;">
+          <div style ="font-weight:bold; font-size:10px;">
           <p>Status: ${formattedInvoice.invoiceStatus?.toUpperCase() || 'N/A'}</p>
           </div>
-          <div style ="font-weight:bold; font-size:16px;" >
+          <div style ="font-weight:bold; font-size:10px;" >
              BILL OF SUPPLY
           </div>
         </div>
         
 
-        <!-- Seller/Buyer + Invoice Details -->
-        <div style="display: flex; width: 100%; box-sizing: border-box;">
+         <!-- Seller/Buyer + Invoice Details -->
+          <div style="display: flex; width: 100%; box-sizing: border-box;">
 
-          <!-- Seller + Buyer -->
-          <div style="width: 45%; border-right: 1px solid #000; ">
-            <!-- Seller -->
-            <div style="margin-bottom: 10px; margin-top: 5px; border-bottom: 1px solid #000; padding: 5px 10px;">
-              <p><strong>${formattedInvoice.sellerName || 'N/A'}</strong></p>
-              <p>${formattedInvoice.sellerAddress || 'N/A'}</p>
-              <p>(Composition Dealer)</p>
-              <p>GSTIN: ${formattedInvoice.sellerGSTIN || 'N/A'}</p>
-              <p>State: ${formattedInvoice.sellerState || 'N/A'}</p>
+            <!-- Seller + Buyer -->
+            <div style="width: 45%; border-right: 1px solid #000; ">
+              <!-- Seller -->
+              <div style="margin-bottom: 10px; margin-top: 5px; border-bottom: 1px solid #000; padding: 5px 10px;">
+                <p><strong>${formattedInvoice.sellerName}</strong></p>
+                <p>${formattedInvoice.sellerAddress}</p>
+                <p>(Composition Dealer)</p>
+                <p>GSTIN: ${formattedInvoice.sellerGSTIN}</p>
+                <p>State: ${formattedInvoice.sellerState}</p>
+              </div>
+
+              <!-- Buyer -->
+              <div style="padding: 2px 10px; ">
+                <p><strong>Buyer(Bill To)</strong><br>${formattedInvoice.buyer.name}</p> 
+                <p>GSTIN: ${formattedInvoice.buyer.buyerGSTIN}</p>
+                <p>State: ${formattedInvoice.buyer.state}</p>
+              </div>
             </div>
 
-            <!-- Buyer -->
-            <div style="padding: 5px 10px;">
-              <p><strong>Buyer(Bill To)</strong><br>${formattedInvoice.buyer.name}</p>
-              <p>State: ${formattedInvoice.buyer.state}</p>
+
+            <!-- Invoice Details -->
+            <div style="width: 55%; box-sizing: border-box;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                <tr>
+                  <td style="border: 1px solid #000; border-top:none; border-left:none; padding: 5px;"><strong>Invoice No.</strong>: ${formattedInvoice.invoiceNo}</td>
+                  <td style="border: 1px solid #000; border-top:none; border-left:none;border-right:none;padding: 5px;"><strong>Dated</strong>: ${formatDateForPDF(formattedInvoice.invoiceDate)}</td>
+                </tr>
+                <tr>
+                  <td style="border: 1px solid #000; border-top:none; border-left:none; padding: 5px;"><strong>Delivery Note</strong>: ${formattedInvoice.deliveryNote}</td>
+                  <td style="border: 1px solid #000; border-top:none; border-left:none;border-right:none; padding: 5px;"><strong>Mode/Terms of Payment</strong>: ${formattedInvoice.paymentTerms}</td>
+                </tr>
+                <tr>
+                  <td style="border: 1px solid #000; border-top:none; border-left:none; padding: 5px;"><strong>Dispatch Doc No</strong>: ${formattedInvoice.dispatchDocNo}</td>
+                  <td style="border: 1px solid #000; border-top:none; border-left:none; border-right:none; padding: 5px;"><strong>Delivery Note Date</strong>: ${formatDateForPDF(formattedInvoice.deliveryNoteDate)}</td>
+                </tr>
+                <tr>
+                  <td style="border: 1px solid #000; border-top:none; border-left:none; padding: 5px;"><strong>Dispatched Through</strong>: ${formattedInvoice.dispatchedThrough}</td>
+                  <td style="border: 1px solid #000; border-top:none; border-left:none;border-right:none; padding: 5px;"><strong>Destination</strong>: ${formattedInvoice.destination}</td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="padding: 10px; border:none !important; "><strong>Terms of Delivery</strong>: ${formattedInvoice.termsOfDelivery}</td>
+                </tr>
+              </table>
             </div>
           </div>
 
-          <!-- Invoice Details -->
-          <div style="width: 55%; box-sizing: border-box;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-              <tr>
-                <td style="border: 1px solid #000; border-top:none; border-left:none; padding: 5px;"><strong>Invoice No.</strong>: ${formattedInvoice.invoiceNo || 'N/A'}</td>
-                <td style="border: 1px solid #000; border-top:none; border-left:none;border-right:none;padding: 5px;"><strong>Dated</strong>: ${(new Date())}</td>
+          <!-- Invoice Items Table -->
+          <table style="width: 100%; border-collapse: collapse; border-top:1px solid #000; font-size: 11px;">
+            <thead>
+              <tr style="border-top: 1px solid #000; border-bottom: 1px solid #000;">
+                <th style="padding: 8px; border-right: 1px solid #000;">S.No</th>
+                <th style="padding: 8px; border-right: 1px solid #000;">Description of Goods</th>
+                <th style="padding: 8px; border-right: 1px solid #000;">HSN</th>
+                <th style="padding: 8px; border-right: 1px solid #000;">Quantity</th>
+                <th style="padding: 8px; border-right: 1px solid #000;">Rate</th>
+                <th style="padding: 8px; border-right: 1px solid #000;">Per</th>
+                <th style="padding: 8px;">Amount</th>
               </tr>
-              <tr>
-                <td style="border: 1px solid #000; border-top:none; border-left:none; padding: 5px;"><strong>Delivery Note</strong>: ${formattedInvoice.deliveryNote || 'N/A'}</td>
-                <td style="border: 1px solid #000; border-top:none; border-left:none;border-right:none; padding: 5px;"><strong>Mode/Terms of Payment</strong>: ${formattedInvoice.paymentTerms || 'N/A'}</td>
+            </thead>
+            <tbody>
+              
+
+                ${itemRows}
+                ${emptyRows}
+
+              <!-- Total Row -->
+              <tr style="font-weight: bold;">
+                <td style="padding: 8px; border: 1px solid #000;border-left:none;"></td>
+                <td style="padding: 8px; text-align: right; border: 1px solid #000;border-left:none;">Total</td>
+                <td style="padding: 8px; border: 1px solid #000;border-left:none;"></td>
+                <td style="padding: 8px; text-align: center; border: 1px solid #000;border-left:none;">
+                  ${formattedInvoice.items.reduce((sum, item) => sum + item.quantity, 0)} Case
+                </td>
+                <td style="padding: 8px; border: 1px solid #000;border-left:none;"></td>
+                <td style="padding: 8px; border: 1px solid #000;border-left:none;"></td>
+                <td style="padding: 8px; text-align: right; border: 1px solid #000; border-left:none;border-right:none">₹${formattedInvoice.grandTotal.toFixed(2)}</td>
               </tr>
-              <tr>
-                <td style="border: 1px solid #000; border-top:none; border-left:none; padding: 5px;"><strong>Dispatch Doc No</strong>: ${formattedInvoice.dispatchDocNo || 'N/A'}</td>
-                <td style="border: 1px solid #000; border-top:none; border-left:none; border-right:none; padding: 5px;"><strong>Delivery Note Date</strong>: ${(formattedInvoice.deliveryNoteDate || 'N/A')}</td>
-              </tr>
-              <tr>
-                <td style="border: 1px solid #000; border-top:none; border-left:none; padding: 5px;"><strong>Dispatched Through</strong>: ${formattedInvoice.dispatchedThrough || 'N/A'}</td>
-                <td style="border: 1px solid #000; border-top:none; border-left:none;border-right:none; padding: 5px;"><strong>Destination</strong>: ${formattedInvoice.destination || 'N/A'}</td>
-              </tr>
-              <tr>
-                <td colspan="2" style="padding: 10px;"><strong>Terms of Delivery</strong>: ${formattedInvoice.termsOfDelivery || 'N/A'}</td>
-              </tr>
-            </table>
+            </tbody>
+          </table>
+
+          <!-- Bottom Margin After Item Rows -->
+          <div style="margin-bottom: 15px;"></div>
+
+          <!-- Total and Amount (LEFT side with increased font) -->
+          <div style="display:flex; justify-content:space-between; align-item:center">
+            <div style="padding-left: 15px; font-size: 12px; margin-top:-10px; margin-bottom:5px;">
+              <p><strong>Amount Chargable(in Words):</strong> <br/>${formattedInvoice.amountInWords}</p>
+            </div>
+            <div style="padding-right: 15px; font-size: 12px;">
+              <p>E. & O.E</p>
+            </div>
+          </div>
+
+          <!-- Declaration + Signature Row -->
+          <div style="display: flex; border-top: 1px solid #000; border-bottom: 1px solid #000; font-size: 11px; height:100px; border-bottom:none;">
+            <!-- Declaration -->
+            <div style="flex: 2; padding: 10px; border-right: 1px solid #000;">
+              <p><strong>Declaration:</strong></p>
+              <p>We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.</p>
+            </div>
+
+            <!-- Authorized Signatory -->
+            <div style="flex: 1; padding: 10px; text-align: center;">
+              <p><strong>Authorised Signatory</strong></p>
+              <p>${formattedInvoice.sellerName}</p>
+            </div>
           </div>
         </div>
 
-        <!-- Invoice Items Table -->
-        <table style="width: 100%; border-collapse: collapse; border-top: none; font-size: 12px;">
-          <thead>
-            <tr style="border-top: 1px solid #000; border-bottom: 1px solid #000;">
-              <th style="padding: 8px; border-right: 1px solid #000;">S.No</th>
-              <th style="padding: 8px; border-right: 1px solid #000;">Description of Goods</th>
-              <th style="padding: 8px; border-right: 1px solid #000;">HSN</th>
-              <th style="padding: 8px; border-right: 1px solid #000;">Quantity</th>
-              <th style="padding: 8px; border-right: 1px solid #000;">Rate</th>
-              <th style="padding: 8px; border-right: 1px solid #000;">Per</th>
-              <th style="padding: 8px;">Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${formattedInvoice.items.map(item => `
-              <tr>
-                <td style="padding: 5px; text-align: center; border-right:1px solid #000;">${item.srNo || ''}</td>
-                <td style="padding: 5px; border-right:1px solid #000;">${item.description || ''}</td>
-                <td style="padding: 5px; text-align: center; border-right:1px solid #000;">${item.hsnCode || ''}</td>
-                <td style="padding: 5px; text-align: center; border-right:1px solid #000;">${item.quantity || 0} Case</td>
-                <td style="padding: 5px; text-align: center;border-right:1px solid #000;">${Number(item.rate || 0).toFixed(2)}</td>
-                <td style="padding: 5px; text-align: center;border-right:1px solid #000;">Case</td>
-                <td style="padding: 5px; text-align: right;">${Number(item.amount || 0).toFixed(2)}</td>
-              </tr>
-            `).join('')}
-
-            <!-- Spacer Row WITH Borders -->
-            <tr style="height: 150px;">
-              <td style="border-right:1px solid #000;"></td>
-              <td style="border-right:1px solid #000;"></td>
-              <td style="border-right:1px solid #000;"></td>
-              <td style="border-right:1px solid #000;"></td>
-              <td style="border-right:1px solid #000;"></td>
-              <td style="border-right:1px solid #000;"></td>
-              <td style="border-right:1px solid #000;border-right:none;"></td>
-            </tr>
-
-            <!-- Total Row -->
-            <tr style="font-weight: bold;">
-              <td style="padding: 8px; border: 1px solid #000;border-left:none;"></td>
-              <td style="padding: 8px; text-align: right; border: 1px solid #000;border-left:none;">Total</td>
-              <td style="padding: 8px; border: 1px solid #000;border-left:none;"></td>
-              <td style="padding: 8px; text-align: center; border: 1px solid #000;border-left:none;">
-                ${formattedInvoice.items.reduce((sum, item) => sum + (item.quantity || 0), 0)} Case
-              </td>
-              <td style="padding: 8px; border: 1px solid #000;border-left:none;"></td>
-              <td style="padding: 8px; border: 1px solid #000;border-left:none;"></td>
-              <td style="padding: 8px; text-align: right; border: 1px solid #000; border-left:none;border-right:none">₹${(formattedInvoice.grandTotal || 0).toFixed(2)}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <!-- Bottom Margin After Item Rows -->
-        <div style="margin-bottom: 15px;"></div>
-
-        <!-- Total and Amount (LEFT side with increased font) -->
-        <div style="display:flex; justify-content:space-between; align-item:center">
-          <div style="padding-left: 15px; font-size: 13px; margin-top:-10px; margin-bottom:5px;">
-            <p><strong>Amount Chargable(in Words):</strong> <br/>${formattedInvoice.amountInWords || ''}</p>
-          </div>
-          <div style="padding-right: 15px; font-size: 13px;">
-            <p>E. & O.E</p>
-          </div>
+        <!-- Footer -->
+        <div style="text-align:center; font-size:10px; font-weight:bold; padding: 10px 0;">
+          This is a Computer Generated Invoice.
         </div>
-
-        <!-- Declaration + Signature Row -->
-        <div style="display: flex; border-top: 1px solid #000; border-bottom: 1px solid #000; font-size: 12px; height:100px; border-bottom:none;">
-          <!-- Declaration -->
-          <div style="flex: 2; padding: 10px; border-right: 1px solid #000;">
-            <p><strong>Declaration:</strong></p>
-            <p>We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.</p>
-          </div>
-
-          <!-- Authorized Signatory -->
-          <div style="flex: 1; padding: 10px; text-align: center;">
-            <p><strong>Authorised Signatory</strong></p>
-            <p>${formattedInvoice.sellerName || 'N/A'}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Footer -->
-      <div style="text-align:center; font-size:10px; font-weight:bold; padding: 15px 0;">
-        This is a Computer Generated Invoice.
-      </div>
     `;
 
     document.body.appendChild(tempDiv);
     
     const canvas = await html2canvas(tempDiv, { 
-      scale: 2,
+       scale: 1.2,
       logging: true,
       useCORS: true,
       backgroundColor: '#ffffff'
@@ -360,13 +376,13 @@ const fetchInvoices = async (token) => {
     
     const imgData = canvas.toDataURL('image/png', 1.0);
     const pdf = new jsPDF({
-      orientation: 'portrait',
+       orientation: 'landscape',
       unit: 'mm',
-      format: 'a4'
+      format: 'a5'
     });
     
-    const imgWidth = 210;
-    const pageHeight = 297;
+     const imgWidth = 210;
+      const pageHeight = 148;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     
     pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);

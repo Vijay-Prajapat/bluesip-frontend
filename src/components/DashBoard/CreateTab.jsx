@@ -898,7 +898,8 @@ const CreateTab = () => {
     buyer: {
       name: "",
       address: "",
-      state: ""
+      state: "",
+      buyerGSTIN:"",
     },
 
     invoiceNo: "",
@@ -926,10 +927,11 @@ const CreateTab = () => {
     amountInWords: "Indian Rupees Two Hundred Only"
   });
 
-  const bottleTypes = ["500ml", "1L"];
+  const bottleTypes = ["250ml", "500ml", "1L"];
   const [invoices, setInvoices] = useState([]);
   const [lastInvoiceNo, setLastInvoiceNo] = useState(0);
   const [lastDownloadedInvoiceNo, setLastDownloadedInvoiceNo] = useState(null);
+ const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -1154,21 +1156,50 @@ const CreateTab = () => {
         })),
         taxableValue: parseFloat(savedInvoice.taxableValue) || 0,
         grandTotal: parseFloat(savedInvoice.grandTotal) || 0
-      };
+      }; 
+      const maxRows = 3;
+const currentRows = formattedInvoice.items.length;
+const emptyRowsNeeded = maxRows - currentRows;
+
+const itemRows = formattedInvoice.items.map(item => `
+  <tr>
+    <td style="padding: 5px; text-align: center; border-right:1px solid #000;border-bottom:none !important;">${item.srNo}</td>
+    <td style="padding: 5px; border-right:1px solid #000;border-bottom:none !important;">${item.description}</td>
+    <td style="padding: 5px; text-align: center; border-right:1px solid #000;border-bottom:none !important;">${item.hsnCode}</td>
+    <td style="padding: 5px; text-align: center; border-right:1px solid #000;border-bottom:none !important;">${item.quantity} Case</td>
+    <td style="padding: 5px; text-align: center;border-right:1px solid #000;border-bottom:none !important;">${Number(item.rate).toFixed(2)}</td>
+    <td style="padding: 5px; text-align: center;border-right:1px solid #000;border-bottom:none !important;">Case</td>
+    <td style="padding: 5px; text-align: right;border-bottom:none !important;">${Number(item.amount).toFixed(2)}</td>
+  </tr>
+`).join('');
+
+const emptyRows = Array.from({ length: emptyRowsNeeded }, () => `
+  <tr style="height: 30px;">
+    <td style="border-right:1px solid #000; border-bottom:none !important;"></td>
+    <td style="border-right:1px solid #000; border-bottom:none !important;"></td>
+    <td style="border-right:1px solid #000; border-bottom:none !important;"></td>
+    <td style="border-right:1px solid #000; border-bottom:none !important;"></td>
+    <td style="border-right:1px solid #000;border-bottom:none !important;"></td>
+    <td style="border-right:1px solid #000; border-bottom:none !important;"></td>
+    <td style="border-bottom:none !important;"></td>
+  </tr>
+`).join('');
+
 
       const tempDiv = document.createElement('div');
       tempDiv.style.width = '210mm';
-      tempDiv.style.padding = '10px';
+     tempDiv.style.fontSize = '10px';
+     tempDiv.style.padding = '5px';
       tempDiv.style.background = '#ffffff';
       tempDiv.style.fontFamily = 'Arial, sans-serif';
       tempDiv.style.color = '#000000';
       
       tempDiv.innerHTML = `
         <!-- Main Border Wrapper -->
-        <div style="border: 1px solid #000; font-family: sans-serif; font-size: 12px; padding: 0;">
+        <div style="border: 1px solid #000; font-family: sans-serif; font-size: 10px; padding: 0;">
 
           <!-- Title -->
-          <div style="text-align:center; font-weight:bold; font-size:16px; padding: 10px 0; border-bottom: 1px solid #000;">
+          <div style="text-align:center; font-weight:bold; font-size:12px; padding: 7px 0; border-bottom: 1px solid #000;">
             BILL OF SUPPLY
           </div>
 
@@ -1187,15 +1218,16 @@ const CreateTab = () => {
               </div>
 
               <!-- Buyer -->
-              <div style="padding: 5px 10px;">
-                <p><strong>Buyer(Bill To)</strong><br>${formattedInvoice.buyer.name}</p>
+              <div style="padding: 2px 10px; ">
+                <p><strong>Buyer(Bill To)</strong><br>${formattedInvoice.buyer.name}</p> 
+                <p>GSTIN: ${formattedInvoice.buyer.buyerGSTIN}</p>
                 <p>State: ${formattedInvoice.buyer.state}</p>
               </div>
             </div>
 
             <!-- Invoice Details -->
             <div style="width: 55%; box-sizing: border-box;">
-              <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
                 <tr>
                   <td style="border: 1px solid #000; border-top:none; border-left:none; padding: 5px;"><strong>Invoice No.</strong>: ${formattedInvoice.invoiceNo}</td>
                   <td style="border: 1px solid #000; border-top:none; border-left:none;border-right:none;padding: 5px;"><strong>Dated</strong>: ${formatDateForPDF(formattedInvoice.invoiceDate)}</td>
@@ -1213,14 +1245,14 @@ const CreateTab = () => {
                   <td style="border: 1px solid #000; border-top:none; border-left:none;border-right:none; padding: 5px;"><strong>Destination</strong>: ${formattedInvoice.destination}</td>
                 </tr>
                 <tr>
-                  <td colspan="2" style="padding: 10px;"><strong>Terms of Delivery</strong>: ${formattedInvoice.termsOfDelivery}</td>
+                  <td colspan="2" style="padding: 10px; border:none !important; "><strong>Terms of Delivery</strong>: ${formattedInvoice.termsOfDelivery}</td>
                 </tr>
               </table>
             </div>
           </div>
 
           <!-- Invoice Items Table -->
-          <table style="width: 100%; border-collapse: collapse; border-top: none; font-size: 12px;">
+          <table style="width: 100%; border-collapse: collapse; border-top:1px solid #000; font-size: 11px;">
             <thead>
               <tr style="border-top: 1px solid #000; border-bottom: 1px solid #000;">
                 <th style="padding: 8px; border-right: 1px solid #000;">S.No</th>
@@ -1233,28 +1265,10 @@ const CreateTab = () => {
               </tr>
             </thead>
             <tbody>
-              ${formattedInvoice.items.map(item => `
-                <tr>
-                  <td style="padding: 5px; text-align: center; border-right:1px solid #000;">${item.srNo}</td>
-                  <td style="padding: 5px; border-right:1px solid #000;">${item.description}</td>
-                  <td style="padding: 5px; text-align: center; border-right:1px solid #000;">${item.hsnCode}</td>
-                  <td style="padding: 5px; text-align: center; border-right:1px solid #000;">${item.quantity} Case</td>
-                  <td style="padding: 5px; text-align: center;border-right:1px solid #000;">${Number(item.rate).toFixed(2)}</td>
-                  <td style="padding: 5px; text-align: center;border-right:1px solid #000;">Case</td>
-                  <td style="padding: 5px; text-align: right;">${Number(item.amount).toFixed(2)}</td>
-                </tr>
-              `).join('')}
+              
 
-              <!-- Spacer Row WITH Borders -->
-              <tr style="height: 150px;">
-                <td style="border-right:1px solid #000;"></td>
-                <td style="border-right:1px solid #000;"></td>
-                <td style="border-right:1px solid #000;"></td>
-                <td style="border-right:1px solid #000;"></td>
-                <td style="border-right:1px solid #000;"></td>
-                <td style="border-right:1px solid #000;"></td>
-                <td style="border-right:1px solid #000;border-right:none;"></td>
-              </tr>
+                ${itemRows}
+                ${emptyRows}
 
               <!-- Total Row -->
               <tr style="font-weight: bold;">
@@ -1276,16 +1290,16 @@ const CreateTab = () => {
 
           <!-- Total and Amount (LEFT side with increased font) -->
           <div style="display:flex; justify-content:space-between; align-item:center">
-            <div style="padding-left: 15px; font-size: 13px; margin-top:-10px; margin-bottom:5px;">
+            <div style="padding-left: 15px; font-size: 12px; margin-top:-10px; margin-bottom:5px;">
               <p><strong>Amount Chargable(in Words):</strong> <br/>${formattedInvoice.amountInWords}</p>
             </div>
-            <div style="padding-right: 15px; font-size: 13px;">
+            <div style="padding-right: 15px; font-size: 12px;">
               <p>E. & O.E</p>
             </div>
           </div>
 
           <!-- Declaration + Signature Row -->
-          <div style="display: flex; border-top: 1px solid #000; border-bottom: 1px solid #000; font-size: 12px; height:100px; border-bottom:none;">
+          <div style="display: flex; border-top: 1px solid #000; border-bottom: 1px solid #000; font-size: 11px; height:100px; border-bottom:none;">
             <!-- Declaration -->
             <div style="flex: 2; padding: 10px; border-right: 1px solid #000;">
               <p><strong>Declaration:</strong></p>
@@ -1309,7 +1323,7 @@ const CreateTab = () => {
       document.body.appendChild(tempDiv);
       
       const canvas = await html2canvas(tempDiv, { 
-        scale: 2,
+        scale: 1.2,
         logging: true,
         useCORS: true,
         backgroundColor: '#ffffff'
@@ -1317,13 +1331,13 @@ const CreateTab = () => {
       
       const imgData = canvas.toDataURL('image/png', 1.0);
       const pdf = new jsPDF({
-        orientation: 'portrait',
+        orientation: 'landscape',
         unit: 'mm',
-        format: 'a4'
+        format: 'a5'
       });
       
       const imgWidth = 210;
-      const pageHeight = 297;
+      const pageHeight = 148;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       
       pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
@@ -1765,6 +1779,19 @@ const printInvoice = async (invoiceData) => {
                   />
                 </div>
               </div>
+                <div className="form-row">
+                <div className="form-col">
+                  <label>Buyer GSTIN</label>
+                  <input 
+                    type="text" 
+                    name="buyerGSTIN" 
+                    value={invoice.buyer.buyerGSTIN} 
+                    onChange={handleBuyerChange}
+                    placeholder="Enter Buyer's GSTIN"
+                    
+                  />
+                </div>
+              </div>
               <div className="form-row">
                 <div className="form-col full-width">
                   <label>Address</label>
@@ -1895,9 +1922,15 @@ const printInvoice = async (invoiceData) => {
                 <h3 className="group-title">
                   <i className="fas fa-boxes"></i> Products
                 </h3>
-                <button className="Button" onClick={addItem}>
-                  <i className="fas fa-plus"></i> Add Item
-                </button>
+             <button 
+                    className="Button" 
+                    onClick={addItem} 
+                    disabled={invoice.items.length >=3}
+                    
+                  >
+              <i className="fas fa-plus"></i> Add Item
+            </button>
+
               </div>
               
               <div className="table-container">
@@ -2023,7 +2056,7 @@ const printInvoice = async (invoiceData) => {
                <div className="tooltip-container">
             <button
               className={`Button ${!isBuyerInfoComplete() ? 'disabled' : ''}`}
-              onClick={() => downloadPDF(invoice)}
+              onClick={() => setShowConfirmModal(true)}
               disabled={!isBuyerInfoComplete()}
             >
               <i className="fas fa-download"></i> Download PDF
@@ -2046,6 +2079,30 @@ const printInvoice = async (invoiceData) => {
             </div>
           </div>
         </div>
+
+
+{showConfirmModal && (
+  <div className="modal-overlay">
+    <div className=" Warning-modal-content">
+      <h2>Confirm Download</h2>
+      <p>Are you sure you want to download this invoice?</p>
+      <div className="modal-actions">
+        <button
+          onClick={() => {
+            downloadPDF(invoice)
+            setShowConfirmModal(false);
+            
+          }}
+          className="confirm-button delete-confirm"
+          style={{marginRight:"10px"}}
+        >
+          Yes, Download
+        </button>
+        <button className="cancel-button" onClick={() => setShowConfirmModal(false)}>Cancel</button>
+      </div>
+    </div>
+  </div>
+)}
 
         {/* Preview Invoice Section */}
         <div className="preview-section">
@@ -2100,7 +2157,8 @@ const printInvoice = async (invoiceData) => {
 
                   {/* Buyer */}
                   <div style={{ padding: '5px 10px' }}>
-                    <p><strong>Buyer(Bill To)</strong><br/>{invoice.buyer.name}</p>
+                    <p><strong>Buyer(Bill To)</strong><br/>{invoice.buyer.name}</p> 
+                    <p>GSTIN: {invoice.buyer.buyerGSTIN}</p>
                     <p>State: {invoice.buyer.state}</p>
                   </div>
                 </div>
@@ -2199,6 +2257,13 @@ const printInvoice = async (invoiceData) => {
                   </table>
                 </div>
               </div>
+
+
+
+
+
+
+
 
               {/* Invoice Items Table */}
               <table style={{ 
