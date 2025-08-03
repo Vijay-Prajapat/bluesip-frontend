@@ -927,7 +927,7 @@ const CreateTab = () => {
     amountInWords: "Indian Rupees Two Hundred Only"
   });
 
-  const bottleTypes = ["250ml", "500ml", "1L"];
+  const bottleTypes = ["200ml", "500ml", "1L"];
   const [invoices, setInvoices] = useState([]);
   const [lastInvoiceNo, setLastInvoiceNo] = useState(0);
   const [lastDownloadedInvoiceNo, setLastDownloadedInvoiceNo] = useState(null);
@@ -953,12 +953,12 @@ const CreateTab = () => {
           setUser(response.data);
         } else {
           localStorage.removeItem("token");
-          navigate("/login");
+          navigate("/");
         }
       } catch (error) {
         console.error("Authentication error:", error);
         localStorage.removeItem("token");
-        navigate("/login");
+        navigate("/");
       }
     };
 

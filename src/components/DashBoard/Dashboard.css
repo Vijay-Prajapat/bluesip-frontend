@@ -1707,7 +1707,6 @@ tr:hover {
   padding: 30px;
   border-radius: 8px;
   width: 90%;
-  max-width: 500px;
   max-height: 90vh;
   overflow-y: auto;
 }
@@ -2104,7 +2103,7 @@ tr:hover {
 
 .materials-summary {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 15px;
   margin-bottom: 20px;
 }
@@ -2535,7 +2534,7 @@ tr:hover {
 
 .summary-card {
   background: #f8f9fa;
-  padding: 15px;
+  padding: 10px;
   border-radius: 6px;
   display: flex;
   gap: 12px;
@@ -2544,10 +2543,8 @@ tr:hover {
 }
 
 .summary-card-icon {
-  font-size: 1.5rem;
+  font-size: 1rem;
   color: #000000;
-  width: 40px;
-  height: 40px;
   background: #e3f2fd;
   border-radius: 50%;
   display: flex;
