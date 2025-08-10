@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import axios from 'axios';
 import { 
   FaPlus, FaEdit, FaTrash, FaHistory, FaCalendarAlt, 
@@ -1288,7 +1288,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
                                   setError('');
                                 }}
                               >
-                               <FaEdit style={{ color: "#000000ff", fontSize: "12px", strokeWidth: 0.1 }} />
+                               <FaEdit style={{ color: "rgba(220, 221, 223, 1)", fontSize: "12px", strokeWidth: 0.1 }} />
                               </button>
                               <button 
                                 className="delete-button"
@@ -1313,7 +1313,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
           {/* Stock Details View */}
           {view === 'details' && (
             <div className="stock-details-container">
-              <h2>Stock Details</h2>
+              
               
               <div className="stock-metrics">
                 <div className="metric-card">

@@ -1,8 +1,15 @@
 /* User Management Styles */
 .user-management-container {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+ background: linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12));
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4),  /* main shadow */
+              0 0 15px rgba(0, 200, 255, 0.05); /* subtle glow */
+              border: 1px solid rgba(255, 255, 255, 0.05);
+              transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  color: rgb(79, 98, 129);
+  max-width: 1000px;
+  min-height: 100vh;
+  padding: 20px;
 }
 
 .user-management-header {
@@ -13,19 +20,27 @@
 }
 
 .add-user-btn {
-  background-color: #000000;
-  color: white;
-  border: none;
+ background: linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12));
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4),  /* main shadow */
+              0 0 15px rgba(0, 200, 255, 0.05); /* subtle glow */
+              border: 1px solid rgba(255, 255, 255, 0.05);
+              transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  color: rgb(255, 255, 255);
   padding: 0.5rem 1rem;
-  border-radius: 4px;
+  border-radius: 12px;
   cursor: pointer;
   font-size: 1rem;
 }
 
 .add-user-btn:hover {
-  background:none;
-  color:black;
-  border: 1px solid black;
+ background: linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12));
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4),  /* main shadow */
+              0 0 15px rgba(0, 200, 255, 0.05); /* subtle glow */
+              border: 1px solid rgba(255, 255, 255, 0.05);
+              transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  color: rgb(79, 98, 129);
 }
 
 .users-table-container {
@@ -45,7 +60,7 @@
 }
 
 .users-table th {
-  background-color: #f2f2f2;
+  
   font-weight: 600;
 }
 
@@ -77,24 +92,42 @@
 }
 
 .edit-btn {
-  background-color: #000000;
-  color: white;
+ background: linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12));
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4),  /* main shadow */
+              0 0 15px rgba(0, 200, 255, 0.05); /* subtle glow */
+              border: 1px solid rgba(255, 255, 255, 0.05);
+              transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  color: rgb(255, 255, 255);
 }
 
 .edit-btn:hover {
- background:none;
-  color:black;
-  border: 1px solid black;
+ background: linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12));
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4),  /* main shadow */
+              0 0 15px rgba(0, 200, 255, 0.05); /* subtle glow */
+             border: 1px solid rgba(255, 255, 255, 0.05);
+              transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  color: rgb(79, 98, 129);
 }
-
-
 .password-btn {
-  background-color: #FFC107;
-  color: #000;
+  background: linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12));
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4),  /* main shadow */
+              0 0 15px rgba(0, 200, 255, 0.05); /* subtle glow */
+               border: 1px solid rgba(255, 255, 255, 0.05);
+              transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  color: rgb(255, 255, 255);
 }
 
 .password-btn:hover {
-  background-color: #e0a800;
+ background: linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12));
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4),  /* main shadow */
+              0 0 15px rgba(0, 200, 255, 0.05); /* subtle glow */
+             border: 1px solid rgba(255, 255, 255, 0.05);
+              transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  color: rgb(79, 98, 129);
 }
 
 .delete-btn {
@@ -121,12 +154,14 @@
 }
 
 .modal-content {
-  background-color: white;
-  padding: 1.5rem;
-  border-radius: 5px;
-  width: 100%;
-  max-width: 500px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+ background: linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12));
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4),  /* main shadow */
+              0 0 15px rgba(0, 200, 255, 0.05); /* subtle glow */
+              border: 1px solid rgba(255, 255, 255, 0.05);
+              transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  color: rgb(79, 98, 129);
+  
 }
 
 .modal-header {
@@ -143,9 +178,10 @@
 .close-btn {
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 2rem;
   cursor: pointer;
-  color: #666;
+  color: rgb(79, 98, 129);
+  
 }
 
 .modal-footer {
@@ -156,25 +192,36 @@
 }
 
 .submit-btn {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
+ 
+  
+background: linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12));
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4),  /* main shadow */
+              0 0 15px rgba(0, 200, 255, 0.05); /* subtle glow */
+              border: 1px solid rgba(255, 255, 255, 0.05);
+              transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  color: rgb(79, 98, 129);  
+
   padding: 0.5rem 1rem;
-  border-radius: 4px;
   cursor: pointer;
 }
 
 .submit-btn.disabled {
-  background-color: #cccccc;
+  
   cursor: not-allowed;
 }
 
 .cancel-btn {
   background-color: #f44336;
-  color: white;
-  border: none;
+background: linear-gradient(145deg, rgb(238, 44, 44), rgb(107, 32, 32));
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4),  /* main shadow */
+              0 0 15px rgba(0, 200, 255, 0.05); /* subtle glow */
+              border: 1px solid rgba(255, 255, 255, 0.05);
+              transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  color: rgb(255, 255, 255);
+  
   padding: 0.5rem 1rem;
-  border-radius: 4px;
   cursor: pointer;
 }
 
@@ -189,7 +236,7 @@
   font-weight: 500;
 }
 
-.form-group input, .form-group select {
+ .form-group select {
   width: 100%;
   padding: 0.5rem;
   border: 1px solid #ddd;
@@ -223,9 +270,15 @@
 }
 
 .confirm-content {
-  background-color: white;
+  background: linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12));
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4),  /* main shadow */
+              0 0 15px rgba(0, 200, 255, 0.05); /* subtle glow */
+              border: 1px solid rgba(255, 255, 255, 0.05);
+              transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  color: rgb(79, 98, 129);
   padding: 1.5rem;
-  border-radius: 5px;
+
   width: 100%;
   max-width: 400px;
   text-align: center;
@@ -245,11 +298,14 @@
 }
 
 .confirm-btn {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
+background: linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12));
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4),  /* main shadow */
+              0 0 15px rgba(0, 200, 255, 0.05); /* subtle glow */
+              border: 1px solid rgba(255, 255, 255, 0.05);
+              transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  color: rgb(79, 98, 129); 
   padding: 0.5rem 1rem;
-  border-radius: 4px;
   cursor: pointer;
 }
 
@@ -267,9 +323,9 @@
   display: inline-block;
   width: 15px;
   height: 15px;
-  border: 2px solid rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(230, 176, 31, 0.1);
   border-radius: 50%;
-  border-top-color: #000000;
+  border-top-color: #e0b320;
   animation: spin 0.5s ease-in-out infinite;
 }
 

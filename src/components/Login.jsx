@@ -61,28 +61,36 @@ const Login = () => {
       justifyContent: "center",
       alignItems: "center",
       height: "100vh",
-      background: "#f4f6f8",
+      background: 'rgb(16, 16, 16)',
       padding: "1rem"
     }}>
       <div style={{
         width: '100%',
         maxWidth: '400px',
-        background: 'white',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+        background: 'linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12))',
+        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 200, 255, 0.05)' ,
+        border: '1px solid rgba(255, 255, 255, 0.05)',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        borderRadius: '12px',
+        color: 'rgb(79, 98, 129)',
         overflow: 'hidden'
       }}>
         {/* Logo Section */}
         <div style={{
-          background: 'linear-gradient(135deg, #2c3e50 0%, #524f4fff 100%)',
+          background: 'linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12))',
+        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 200, 255, 0.05)' ,
+        border: '1px solid rgba(255, 255, 255, 0.05)',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        color: 'rgb(79, 98, 129)',
+
           padding: '0.8rem',
           textAlign: 'center'
         }}>
           <img
-            src="./Black-Logo.png"
+            src="./white-Logo.png"
             alt="Logo"
             style={{
-              width: '150px',
-              filter: 'brightness(0) invert(1)',
+              width: '210px',
               marginTop: '10px'
             }}
           />
@@ -167,9 +175,14 @@ const Login = () => {
               style={{
                 width: '100%',
                 padding: '1rem',
-                background: 'linear-gradient(135deg, #2c3e50 0%, #524f4fff 100%)',
-                color: 'white',
-                border: 'none',
+              
+                background: 'linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12))',
+        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 200, 255, 0.05)' ,
+        border: '1px solid rgba(255, 255, 255, 0.05)',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        borderRadius: '12px',
+        color: 'rgb(79, 98, 129)',
+               
                 fontSize: '1rem',
                 fontWeight: '600',
                 cursor: 'pointer',

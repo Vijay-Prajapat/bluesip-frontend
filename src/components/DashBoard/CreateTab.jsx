@@ -1708,8 +1708,9 @@ const printInvoice = async (invoiceData) => {
               <i className="fas fa-file-alt"></i> Create New Invoice
             </h2>
             
+            <div className = "seller-buyer-form">
             {/* Seller Information */}
-            <div className="form-group">
+            <div className="seller-form-group">
               <h3 className="group-title">
                 <i className="fas fa-building"></i> Seller Information
               </h3>
@@ -1761,8 +1762,8 @@ const printInvoice = async (invoiceData) => {
               </div>
             </div>
 
-            {/* Buyer Information */}
-            <div className="form-group">
+          {/* Buyer Information */}
+            <div className="buyer-form-group">
               <h3 className="group-title">
                 <i className="fas fa-user-tie"></i> Buyer Details
               </h3>
@@ -1778,8 +1779,7 @@ const printInvoice = async (invoiceData) => {
                     required
                   />
                 </div>
-              </div>
-                <div className="form-row">
+              
                 <div className="form-col">
                   <label>Buyer GSTIN</label>
                   <input 
@@ -1816,6 +1816,9 @@ const printInvoice = async (invoiceData) => {
                   />
                 </div>
               </div>
+            </div>
+
+
             </div>
 
             {/* Invoice Details */}
@@ -2037,16 +2040,13 @@ const printInvoice = async (invoiceData) => {
                     className="grand-total"
                   />
                 </div>
-              </div>
-              <div className="form-row">
+           
                 <div className="form-col full-width">
                   <label>Amount in Words</label>
-                  <textarea 
-                    value={invoice.amountInWords} 
-                    readOnly
-                    rows="2"
-                  ></textarea>
+                <div className="AmountInwords">
+                    {invoice.amountInWords} 
                 </div>
+                 </div>
               </div>
             </div>
 
@@ -2156,7 +2156,7 @@ const printInvoice = async (invoiceData) => {
                   </div>
 
                   {/* Buyer */}
-                  <div style={{ padding: '5px 10px' }}>
+                  <div style={{ padding: '5px 10px'}}>
                     <p><strong>Buyer(Bill To)</strong><br/>{invoice.buyer.name}</p> 
                     <p>GSTIN: {invoice.buyer.buyerGSTIN}</p>
                     <p>State: {invoice.buyer.state}</p>
@@ -2167,11 +2167,11 @@ const printInvoice = async (invoiceData) => {
                 <div style={{ 
                   width: '55%', 
                   boxSizing: 'border-box'
-                }}>
+                }} className="Preview-Invoice-details">
                   <table style={{ 
                     width: '100%', 
                     borderCollapse: 'collapse', 
-                    fontSize: '14px'
+                    fontSize: '14px',
                   }}>
                     <tr>
                       <td style={{ 
@@ -2271,7 +2271,9 @@ const printInvoice = async (invoiceData) => {
                 borderCollapse: 'collapse', 
                 borderTop: 'none', 
                 fontSize: '12px'
-              }}>
+              }} 
+               className="Preview-Invoice-details"
+              >
                 <thead>
                   <tr style={{ 
                     borderTop: '1px solid #000', 

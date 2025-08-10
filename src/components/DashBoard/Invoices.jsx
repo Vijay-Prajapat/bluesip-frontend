@@ -413,7 +413,10 @@ const emptyRows = Array.from({ length: emptyRowsNeeded }, () => `
   // Render
   return (
     <div className="invoice-containerBox">
-      <h2>All Invoices</h2>
+      <div className='section-title'>
+   <h2>All Invoices</h2>
+      </div>
+     
 
       {/* Filter Controls */}
       <div className="filter-controls">
