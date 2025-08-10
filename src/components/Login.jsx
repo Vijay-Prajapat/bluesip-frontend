@@ -87,7 +87,7 @@ const Login = () => {
           textAlign: 'center'
         }}>
           <img
-            src="./white-Logo.png"
+            src="./White-Logo.png"
             alt="Logo"
             style={{
               width: '210px',

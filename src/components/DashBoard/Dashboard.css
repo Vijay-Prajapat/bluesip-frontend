@@ -2427,6 +2427,7 @@ tr:hover {
   border-radius: 12px;
   color: rgb(79, 98, 129);
   margin: 20px 0;
+  width: 1000px;
 }
 
 /* Calendar Header Styles */
