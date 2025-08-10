@@ -108,10 +108,7 @@ export default function App() {
             font-size: 1rem; /* Large font size */
            
             padding:10px;
-             background: linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12));
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4),  /* main shadow */
-              0 0 15px rgba(0, 200, 255, 0.05); /* subtle glow */
-              border: 1px solid rgba(255, 255, 255, 0.05);
+           
               transition: transform 0.2s ease, box-shadow 0.2s ease;
   border-radius: 12px;
   color: rgb(79, 98, 129);

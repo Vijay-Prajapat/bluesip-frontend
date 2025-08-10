@@ -85,6 +85,7 @@ useEffect(() => {
 
 const handleEditLabel = async () => {
   try {
+    setLoading(true);
     await axios.put(
       `https://bluesip-backend.onrender.com/api/company-labels/${selectedLabel._id}`,
       {
@@ -95,8 +96,10 @@ const handleEditLabel = async () => {
     );
     
     fetchLabels();
+     setLoading(false);
     setShowEditForm(false);
     toast.success('Label updated successfully!');
+   
   } catch (err) {
     setError('Failed to update label');
     toast.error('Failed to update label');
@@ -150,6 +153,7 @@ const fetchLabels = async () => {
 
  const handleAddLabel = async () => {
     try {
+      setLoading(true);
       // Check for duplicate label name
       const exists = labels.some(
         label => ( label.labelName.toLowerCase() === newLabel.labelName.toLowerCase()  && label.bottleType === newLabel.bottleType)
@@ -181,6 +185,7 @@ const fetchLabels = async () => {
         stock: 0, 
         minStockLevel: 100 
       });
+      setLoading(false);
       toast.success('Label added successfully!');
     } catch (err) {
       const errorMsg = err.response?.data?.error || err.message || 'Failed to add label';
@@ -269,6 +274,7 @@ const filterLabels = (searchTerm, filter) => {
     lastRestockDate: '',
     nextRestockDate: ''
   });
+const [showLowStockPopup, setShowLowStockPopup] = useState(false);
 
   const [newPurchase, setNewPurchase] = useState({
     materialType: 'PET Bottle',
@@ -454,6 +460,8 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
 
   const handleAddStock = async () => {
     try {
+
+      setLoading(true);
       const payload = {
         ...newStock,
         currentStock: Number(newStock.currentStock),
@@ -472,6 +480,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
       setStocks([...stocks, data]);
       setShowAddForm(false);
       resetForm();
+      setLoading(false);
       toast.success('Stock added successfully!');
     } catch (err) {
       console.error('Error details:', err.response?.data);
@@ -483,6 +492,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
 
   const handleEditStock = async () => {
     try {
+      setLoading(true);
       const payload = {
         ...selectedStock,
         currentStock: Number(selectedStock.currentStock),
@@ -500,6 +510,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
       
       fetchAllData();
       setShowEditForm(false);
+      setLoading(false);
       toast.success('Stock updated successfully!');
     } catch (err) {
       setError('Failed to update stock');
@@ -525,6 +536,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
 
   const handleUpdateMaterial = async () => {
     try {
+      setLoading(true);
       const material = rawMaterials.find(m => m._id === materialUpdate.materialId);
       if (!material) {
         throw new Error('Material not found');
@@ -544,6 +556,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
 
       toast.success("Material updated successfully!");
       setShowUpdateMaterialForm(false);
+      setLoading(false);
       fetchAllData();
       fetchRecentUpdates();
     } catch (err) {
@@ -575,6 +588,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
 
  const handleAddMaterialPurchase = async () => {
   try {
+    setLoading(true);
     const response = await axios.post(
       'https://bluesip-backend.onrender.com/api/material-purchases',
       {
@@ -591,7 +605,9 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
     );
 
     toast.success("Purchase added successfully!");
+
     setShowAddMaterialForm(false);
+    setLoading(false);
     setPurchaseForm({
       materialType: '',
       quantity: '',
@@ -1020,21 +1036,40 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
               </>
             )}
             
+            
             <div className="modal-actions">
-              <button 
-                className="cancel-button" 
-                onClick={() => setShowUpdateMaterialForm(false)}
-              >
-                Cancel
-              </button>
-              <button 
-                className="confirm-button" 
-                onClick={handleUpdateMaterial}
+                 { !loading ? <button 
+                        className="cancel-button" 
+                         onClick={() => setShowUpdateMaterialForm(false)}> Cancel
+                      </button> :"" }
+
+                {loading ? 
+                      (
+                        <>
+                      <button 
+                      className="confirm-button" 
+                       >
+                          <div className="spinner-containerr">
+                <div className="loading-spinnerr"></div>
+                  Updating Stock
+              </div> 
+                      
+        </button> </> ) :
+            <button 
+                        className="confirm-button" 
+                          onClick={handleUpdateMaterial}
                 disabled={!materialUpdate.materialId}
-              >
-                Update
-              </button>
-            </div>
+                      >
+                        Update 
+                      </button>
+                      
+                      }
+                    </div>
+
+
+
+
+
           </div>
         </div>
       )}
@@ -1093,12 +1128,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
             <>
               {/* Controls Section */}
               <div className="stock-controls">
-                <button 
-                  className="Button"
-                  onClick={() => setShowAddForm(true)}
-                >
-                  <FaPlus/> Add Stock
-                </button>
+               
                 
                 <div className="search-filter">
                   <input
@@ -1117,7 +1147,13 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
                     <option value="low">Low Stock</option>
                     <option value="out">Out of Stock</option>
                   </select>
-                </div>
+                </div> 
+                 <button 
+                  className="Button"
+                  onClick={() => setShowAddForm(true)}
+                >
+                  <FaPlus/> Add Stock
+                </button>
               </div>
 
               {/* Add Stock Form */}
@@ -1126,7 +1162,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
                   <div className="modal-content">
                     <h2>Add New Bottle Stock</h2>
                     {error && <p className="error-message">{error}</p>}
-                    
+                     <div className="form-row">
                     <div className="form-group">
                       <label>Organization</label>
                       <input
@@ -1144,11 +1180,12 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
                         onChange={(e) => setNewStock({...newStock, size: e.target.value})}
                         required
                       >
+                        <option value="200ml">200ml</option>
                         <option value="500ml">500ml</option>
                         <option value="1L">1 Liter</option>
                       </select>
                     </div>
-                    
+                    </div>
                     <div className="form-row">
                       <div className="form-group">
                         <label>Current Stock</label>
@@ -1174,7 +1211,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
                     </div>
                     
                   
-                    
+                   <div className="form-row">
                     <div className="form-group">
                       <label>Last Restock Date</label>
                       <input
@@ -1193,7 +1230,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
                       />
                     </div>
                     
-                  
+                 </div>
                     
                     <div className="form-group">
                       <label>Notes</label>
@@ -1205,6 +1242,8 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
                     </div>
                     
                     <div className="modal-actions">
+                 { !loading ? 
+                     
                       <button 
                         className="cancel-button" 
                         onClick={() => {
@@ -1213,13 +1252,34 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
                         }}
                       >
                         Cancel
-                      </button>
+                      </button> :""
+                              
+                              }
+
+                {loading ? 
+                      (
+                        <>
                       <button 
+                      className="confirm-button" 
+                       >
+                          <div className="spinner-containerr">
+      <div className="loading-spinnerr"></div>
+        Adding Stock
+    </div> 
+                      
+        </button>
+
+                  
+    </>        )
+
+                      :   <button 
                         className="confirm-button" 
                         onClick={handleAddStock}
                       >
                         Add Stock
                       </button>
+                      
+                      }
                     </div>
                   </div>
                 </div>
@@ -1395,7 +1455,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
                 </div>
                 
                 {error && <p className="error-message">{error}</p>}
-                
+                 <div className="form-row">
                 <div className="form-group">
                   <label>Organization</label>
                   <input
@@ -1413,11 +1473,12 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
                     onChange={(e) => setSelectedStock({...selectedStock, size: e.target.value})}
                     required
                   >
+                       <option value="200ml">200ml</option>
                     <option value="500ml">500ml</option>
                     <option value="1L">1 Liter</option>
                   </select>
                 </div>
-                
+                </div>
                 <div className="form-row">
                   <div className="form-group">
                     <label>Current Stock</label>
@@ -1443,7 +1504,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
                 </div>
                 
              
-                
+                 <div className="form-row">
                 <div className="form-group">
                   <label>Last Restock Date</label>
                   <input
@@ -1461,7 +1522,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
                     onChange={(e) => setSelectedStock({...selectedStock, nextRestockDate: e.target.value})}
                   />
                 </div>
-                
+                </div>
               
                 
                 <div className="form-group">
@@ -1473,23 +1534,48 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
                   />
                 </div>
                 
-                <div className="modal-actions">
-                  <button 
-                    className="cancel-button" 
-                    onClick={() => {
-                      setShowEditForm(false);
-                      setError('');
-                    }}
-                  >
-                    Cancel
-                  </button>
-                  <button 
-                    className="confirm-button" 
-                    onClick={handleEditStock}
-                  >
-                    Save Changes
-                  </button>
-                </div>
+
+                 <div className="modal-actions">
+                 { !loading ? 
+                     
+                      <button 
+                        className="cancel-button" 
+                        onClick={() => {
+                          setShowEditForm(false);
+                          setError('');
+                        }}
+                      >
+                        Cancel
+                      </button> :""
+                              
+                              }
+
+                {loading ? 
+                      (
+                        <>
+                      <button 
+                      className="confirm-button" 
+                       >
+                          <div className="spinner-containerr">
+      <div className="loading-spinnerr"></div>
+        Saving changes
+    </div> 
+                      
+        </button>
+
+                  
+    </>        )
+
+                      :   <button 
+                        className="confirm-button" 
+                       onClick={handleEditStock}
+                      >
+                        Save Changes
+                      </button>
+                      
+                      }
+                    </div>
+
               </div>
             </div>
           )}
@@ -1504,6 +1590,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
       {error && <p className="error-message">{error}</p>}
 
       {/* Material Type */}
+       <div className="form-row">
       <div className="form-group">
         <label>Material Type</label>
         <select
@@ -1554,7 +1641,8 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
           required
         />
       </div>
-
+</div>
+ <div className="form-row">
       {/* Cost */}
       <div className="form-group">
         <label>Cost</label>
@@ -1587,7 +1675,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
           }
         />
       </div>
-
+</div>
       {/* Notes */}
       <div className="form-group">
         <label>Notes</label>
@@ -1601,17 +1689,50 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
       </div>
 
       {/* Modal Actions */}
-      <div className="modal-actions">
-        <button
-          className="cancel-button"
-          onClick={() => setShowAddMaterialForm(false)}
-        >
-          Cancel
+     
+
+   <div className="modal-actions">
+                 { !loading ? 
+                     
+                      <button 
+                        className="cancel-button" 
+                        onClick={() => {
+                          {setShowAddMaterialForm(false)}
+                          setError('');
+                        }}
+                      >
+                        Cancel
+                      </button> :""
+                              
+                              }
+
+                {loading ? 
+                      (
+                        <>
+                      <button 
+                      className="confirm-button" 
+                       >
+                          <div className="spinner-containerr">
+      <div className="loading-spinnerr"></div>
+        Adding 
+    </div> 
+                      
         </button>
-        <button className="confirm-button" onClick={handleAddMaterialPurchase}>
-          Add
-        </button>
-      </div>
+
+                  
+    </>        )
+
+                      :   <button 
+                        className="confirm-button" 
+                       onClick={handleAddMaterialPurchase}
+                      >
+                        Add 
+                      </button>
+                      
+                      }
+     </div>
+
+
     </div>
   </div>
 )}
@@ -1636,10 +1757,20 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
       {/* Raw Materials Management */}
       {activeTab === 'rawMaterials' && (
         <div className="raw-materials-container">
-          <div className="Buttons">
+         <div className="stock-controls">
            
-             
-             <button  className="Button" onClick={() => setShowAddMaterialForm(true)}>
+          {/* Low Stock Warning Button */}
+{getLowStockMaterials().length > 0 && (
+  <div style={{ marginTop: "1rem" }}>
+    <button className="Button" onClick={() => setShowLowStockPopup(true)}>
+      View Low Stock Items
+    </button>
+  </div>
+)}          
+   
+
+  <div>
+             <button  className="Button" onClick={() => setShowAddMaterialForm(true)} style={{marginRight:"10px"}}>
                     <FaPlus /> Add Purchase
             </button>
 
@@ -1662,22 +1793,42 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
               <FaPlus/> Update 
             </button>
            
+</div>
+     
 
           </div>
 
-          {/* Low Stock Warning */}
-          {getLowStockMaterials().length > 0 && (
-            <div className="alert-warning">
-              <FaExclamationTriangle /> The following materials are low on stock:
-              <ul>
-                {getLowStockMaterials().map(material => (
-                  <li key={material._id}>
-                    {material.materialType} - {material.currentStock} {material.unit} (min: {material.minStockLevel})
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+        
+
+{/* Low Stock Popup */}
+{showLowStockPopup && (
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <h2>Low Stock Alert</h2>
+      <div style={{ marginBottom: "1rem" }}>
+        <FaExclamationTriangle style={{ color: "#e0b320", marginRight: "6px" }} />
+        The following materials are low on stock:
+      </div>
+
+      <ul style={{ paddingLeft: "20px", marginBottom: "1.5rem" }}>
+        {getLowStockMaterials().map((material) => (
+          <li key={material._id}>
+            {material.materialType} - {material.currentStock} {material.unit} (min: {material.minStockLevel})
+          </li>
+        ))}
+      </ul>
+
+      <div className="modal-actions">
+        <button
+          className="cancel-button"
+          onClick={() => setShowLowStockPopup(false)}
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
         
 
@@ -1882,12 +2033,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
       <>
         {/* Controls Section */}
         <div className="stock-controls">
-          <button 
-            className="Button"
-            onClick={() => setShowAddForm(true)}
-          >
-            <FaPlus/> Add Label
-          </button>
+         
           
           <div className="search-filter">
             <input
@@ -1913,6 +2059,12 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
               <option value="out">Out of Stock</option>
             </select>
           </div>
+           <button 
+            className="Button"
+            onClick={() => setShowAddForm(true)}
+          >
+            <FaPlus/> Add Label
+          </button>
         </div>
 
         {/* Add Label Form */}
@@ -1922,6 +2074,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
               <h2>Add New Company Label</h2>
               {error && <p className="error-message">{error}</p>}
               
+               <div className="form-row">
               <div className="form-group">
                 <label>Label Name</label>
                 <input
@@ -1942,7 +2095,8 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
                   required
                 />
               </div>
-
+           </div>
+            <div className="form-row">
                <div className="form-group">
                 <label>Cost</label>
                 <input
@@ -1969,7 +2123,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
     <option value="1L">1L</option>
   </select>
 </div>
-
+</div>
               <div className="form-group">
                 <label>Min Stock Level</label>
                 <input
@@ -1987,23 +2141,51 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
 
 
 
-              <div className="modal-actions">
-                <button 
-                  className="cancel-button" 
-                  onClick={() => {
-                    setShowAddForm(false);
-                    setError('');
-                  }}
-                >
-                  Cancel
-                </button>
-                <button 
-                  className="confirm-button" 
-                  onClick={handleAddLabel}
-                >
-                  Add Label
-                </button>
-              </div>
+             
+
+   <div className="modal-actions">
+                 { !loading ? 
+                     
+                      <button 
+                        className="cancel-button" 
+                        onClick={() => {
+                          setShowAddForm(false);
+                          setError('');
+                        }}
+                      >
+                        Cancel
+                      </button> :""
+                              
+                              }
+
+                {loading ? 
+                      (
+                        <>
+                      <button 
+                      className="confirm-button" 
+                       >
+                          <div className="spinner-containerr">
+      <div className="loading-spinnerr"></div>
+        Adding Label
+    </div> 
+                      
+        </button>
+
+                  
+    </>        )
+
+                      :   <button 
+                        className="confirm-button" 
+                       onClick={handleAddLabel}
+                      >
+                        Add Label
+                      </button>
+                      
+                      }
+                    </div>
+
+
+
             </div>
           </div>
         )}
@@ -2200,7 +2382,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
           </div>
           
           {error && <p className="error-message">{error}</p>}
-          
+           <div className="form-row">
           <div className="form-group">
             <label>Label Name</label>
             <input
@@ -2224,6 +2406,7 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
           <option value="500ml">500ml</option>
           <option value="1L">1L</option>
         </select>
+      </div>
       </div>
           <div className="form-row">
             <div className="form-group">
@@ -2249,23 +2432,50 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
             </div>
           </div>
           
-          <div className="modal-actions">
-            <button 
-              className="cancel-button" 
-              onClick={() => {
-                setShowEditForm(false);
+        
+
+         <div className="modal-actions">
+                 { !loading ? 
+                     
+                      <button  
+                        className="cancel-button" 
+                        onClick={() => {
+                          setShowEditForm(false);
                 setError('');
-              }}
-            >
-              Cancel
-            </button>
-            <button 
-              className="confirm-button" 
-              onClick={handleEditLabel}
-            >
-              Save Changes
-            </button>
-          </div>
+                        }}
+                      >
+                        Cancel
+                      </button> :""
+                              
+                              }
+
+                {loading ? 
+                      (
+                        <>
+                      <button 
+                      className="confirm-button" 
+                       >
+                          <div className="spinner-containerr">
+      <div className="loading-spinnerr"></div>
+        Saving Changes
+    </div> 
+                      
+        </button>
+
+                  
+    </>        )
+
+                      :   <button 
+                        className="confirm-button" 
+                         onClick={handleEditLabel}
+                      >
+                          Save Changes
+                      </button>
+                      
+                      }
+                    </div>
+
+
         </div>
       </div>
     )}
@@ -2352,7 +2562,39 @@ console.log("Fetching from:", format(startDate, 'yyyy-MM-dd'), "to", format(endD
   </div>
 )}
 
+
+
+   <style>
+      {`
+        .loading-spinnerr {
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          border: 3px solid rgba(230, 176, 31, 0.2);
+          border-radius: 50%;
+          border-top-color: #e0b320;
+          animation: spin 0.6s linear infinite;
+        }
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+        .spinner-containerr {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+          font-size: 16px;
+          color: #ccc;
+        }
+      `}
+    </style>
+
+
     </div>
+
+
+
+
   );
 };
 

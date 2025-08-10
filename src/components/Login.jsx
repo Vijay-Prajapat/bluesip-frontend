@@ -3,6 +3,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+
+
+
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -56,6 +59,10 @@ const Login = () => {
   }
 
   return (
+
+<>
+
+    
     <div style={{
       display: "flex",
       justifyContent: "center",
@@ -192,13 +199,49 @@ const Login = () => {
               onMouseOver={e => e.target.style.backgroundColor = '#1a1b1b'}
               onMouseOut={e => e.target.style.backgroundColor = '#2c3e50'}
             >
-              {loading ? 'Logging in...' : 'Login'}
+               {loading ? (
+    <div className="spinner-containerr">
+      <div className="loading-spinnerr"></div>
+      Logging in...
+    </div>
+  ) : (
+    'Login'
+  )}
             </button>
           </form>
         </div>
       </div>
     </div>
+
+
+   <style>
+      {`
+        .loading-spinnerr {
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          border: 3px solid rgba(230, 176, 31, 0.2);
+          border-radius: 50%;
+          border-top-color: #e0b320;
+          animation: spin 0.6s linear infinite;
+        }
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+        .spinner-containerr {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+          font-size: 16px;
+          color: #ccc;
+        }
+      `}
+    </style>
+
+    </>
   );
 };
 
 export default Login;
+
