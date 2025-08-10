@@ -7,7 +7,7 @@
               transition: transform 0.2s ease, box-shadow 0.2s ease;
   border-radius: 12px;
   color: rgb(79, 98, 129);
-  max-width: 1000px;
+  max-width: 1080px;
   min-height: 100vh;
   padding: 20px;
 }

@@ -303,7 +303,7 @@ body::-webkit-scrollbar {
     background: linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12));
     padding: 1.75rem;
     border-radius: 12px;
-    width: 1000px;
+    width: 1080px;
     box-shadow:
         0 4px 10px rgba(0, 0, 0, 0.4),  /* main shadow */
         0 0 15px rgba(0, 200, 255, 0.05); /* subtle glow */
@@ -986,7 +986,7 @@ button i {
 /* Base Styles */
 .invoice-containerBox {
  
-  max-width: 1000px;
+  max-width: 1080px;
  
   background: linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12));
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4),  /* main shadow */
@@ -1458,7 +1458,7 @@ button i {
 
 .stock-management-container {
   padding: 20px;
-  max-width: 1000px;
+  max-width: 1080px;
   background: linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12));
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4),  /* main shadow */
               0 0 15px rgba(0, 200, 255, 0.05); /* subtle glow */
@@ -4019,7 +4019,7 @@ background: linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12));
    background: linear-gradient(145deg, rgb(20, 20, 20), rgb(12, 12, 12));
     padding: 0.2rem 1.75rem;
     border-radius: 12px;
-    width: 1000px;
+    width: 1080px;
     box-shadow:
         0 4px 10px rgba(0, 0, 0, 0.4),  /* main shadow */
         0 0 15px rgba(0, 200, 255, 0.05); /* subtle glow */
